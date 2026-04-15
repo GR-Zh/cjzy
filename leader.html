@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>负责人页面 - 志愿活动管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+        }
+
+        .nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav a:hover {
+            opacity: 0.8;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-present {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-late {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-leave {
+            background: #cce7ff;
+            color: #004085;
+        }
+
+        .status-absent {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .tab-container {
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .attendance-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <h1>志愿活动管理系统 - 负责人</h1>
+            <div class="nav">
+                <a href="index.html">退出登录</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="section">
+            <h2>考勤管理</h2>
+            
+            <div class="tab-container">
+                <div class="tabs">
+                    <div class="tab active" data-tab="record-attendance">记录考勤</div>
+                    <div class="tab" data-tab="view-attendance">查看考勤</div>
+                    <div class="tab" data-tab="attendance-summary">考勤总结</div>
+                </div>
+
+                <div class="tab-content active" id="record-attendance">
+                    <div class="attendance-form">
+                        <form id="attendance-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="attendance-date">日期</label>
+                                    <input type="date" id="attendance-date" name="date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="activity-name">活动名称</label>
+                                    <input type="text" id="activity-name" name="activity" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="activity-hours">课时（小时）</label>
+                                    <input type="number" id="activity-hours" name="hours" min="1" max="10" required>
+                                </div>
+                            </div>
+
+                            <h3>成员考勤</h3>
+                            <div id="members-list">
+                                <!-- 成员列表将通过JavaScript动态生成 -->
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">提交考勤</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="view-attendance">
+                    <table id="attendance-table">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>活动</th>
+                                <th>成员</th>
+                                <th>状态</th>
+                                <th>课时</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 考勤数据将通过JavaScript动态生成 -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tab-content" id="attendance-summary">
+                    <div id="summary-content">
+                        <!-- 考勤总结将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查登录状态
+            checkLogin();
+
+            // 初始化标签页
+            initTabs();
+
+            // 加载成员列表
+            loadMembers();
+
+            // 加载考勤数据
+            loadAttendance();
+
+            // 加载考勤总结
+            loadAttendanceSummary();
+
+            // 考勤表单提交
+            const attendanceForm = document.getElementById('attendance-form');
+            if (attendanceForm) {
+                attendanceForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    submitAttendance();
+                });
+            }
+        });
+
+        function checkLogin() {
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
+            if (!user || (user.role !== 'leader' && user.role !== 'admin')) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function initTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有标签页的active类
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // 添加当前标签页的active类
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+
+        function loadMembers() {
+            const members = JSON.parse(localStorage.getItem('members') || '[]');
+            const membersList = document.getElementById('members-list');
+            
+            if (membersList) {
+                membersList.innerHTML = '';
+                
+                members.forEach(member => {
+                    const memberItem = document.createElement('div');
+                    memberItem.className = 'form-row';
+                    memberItem.innerHTML = `
+                        <div class="form-group">
+                            <label>${member.name}</label>
+                        </div>
+                        <div class="form-group">
+                            <select name="status-${member.id}" required>
+                                <option value="present">签到</option>
+                                <option value="late">迟到</option>
+                                <option value="leave">请假</option>
+                                <option value="absent">旷课</option>
+                            </select>
+                        </div>
+                    `;
+                    membersList.appendChild(memberItem);
+                });
+            }
+        }
+
+        function submitAttendance() {
+            const date = document.getElementById('attendance-date').value;
+            const activity = document.getElementById('activity-name').value;
+            const hours = parseInt(document.getElementById('activity-hours').value);
+            const members = JSON.parse(localStorage.getItem('members') || '[]');
+            const attendance = JSON.parse(localStorage.getItem('attendance') || '[]');
+
+            members.forEach(member => {
+                const status = document.querySelector(`select[name="status-${member.id}"]`).value;
+                
+                // 只有签到和迟到记录课时
+                const recordHours = (status === 'present' || status === 'late') ? hours : 0;
+                
+                attendance.push({
+                    date,
+                    activity,
+                    memberId: member.id,
+                    memberName: member.name,
+                    status,
+                    hours: recordHours
+                });
+            });
+
+            localStorage.setItem('attendance', JSON.stringify(attendance));
+
+            // 重置表单
+            document.getElementById('attendance-form').reset();
+
+            // 重新加载成员列表
+            loadMembers();
+
+            // 显示成功消息
+            const successMessage = document.createElement('div');
+            successMessage.className = 'success-message';
+            successMessage.textContent = '考勤提交成功！';
+            document.getElementById('record-attendance').insertBefore(successMessage, document.querySelector('.attendance-form'));
+            
+            // 3秒后移除成功消息
+            setTimeout(() => successMessage.remove(), 3000);
+
+            // 重新加载考勤数据
+            loadAttendance();
+            loadAttendanceSummary();
+        }
+
+        function loadAttendance() {
+            const attendance = JSON.parse(localStorage.getItem('attendance') || '[]');
+            const tbody = document.querySelector('#attendance-table tbody');
+            
+            if (tbody) {
+                tbody.innerHTML = '';
+                
+                attendance.forEach(record => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${record.date}</td>
+                        <td>${record.activity}</td>
+                        <td>${record.memberName}</td>
+                        <td><span class="status-badge status-${record.status}">${getStatusText(record.status)}</span></td>
+                        <td>${record.hours || 0}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+        }
+
+        function getStatusText(status) {
+            switch (status) {
+                case 'present': return '签到';
+                case 'late': return '迟到';
+                case 'leave': return '请假';
+                case 'absent': return '旷课';
+                default: return status;
+            }
+        }
+
+        function loadAttendanceSummary() {
+            const attendance = JSON.parse(localStorage.getItem('attendance') || '[]');
+            const members = JSON.parse(localStorage.getItem('members') || '[]');
+            const summaryContent = document.getElementById('summary-content');
+            
+            if (summaryContent) {
+                summaryContent.innerHTML = '';
+                
+                members.forEach(member => {
+                    const memberAttendance = attendance.filter(record => record.memberName === member.name);
+                    const present = memberAttendance.filter(record => record.status === 'present').length;
+                    const late = memberAttendance.filter(record => record.status === 'late').length;
+                    const leave = memberAttendance.filter(record => record.status === 'leave').length;
+                    const absent = memberAttendance.filter(record => record.status === 'absent').length;
+                    const totalHours = memberAttendance.reduce((sum, record) => sum + (record.hours || 0), 0);
+
+                    const card = document.createElement('div');
+                    card.style.background = '#f8f9fa';
+                    card.style.borderRadius = '10px';
+                    card.style.padding = '20px';
+                    card.style.marginBottom = '20px';
+                    card.style.borderLeft = '4px solid #667eea';
+                    card.innerHTML = `
+                        <h3>${member.name}</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 10px;">
+                            <div>
+                                <strong>签到:</strong> ${present}次
+                            </div>
+                            <div>
+                                <strong>迟到:</strong> ${late}次
+                            </div>
+                            <div>
+                                <strong>请假:</strong> ${leave}次
+                            </div>
+                            <div>
+                                <strong>旷课:</strong> ${absent}次
+                            </div>
+                            <div>
+                                <strong>总课时:</strong> ${totalHours}小时
+                            </div>
+                        </div>
+                    `;
+                    summaryContent.appendChild(card);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
